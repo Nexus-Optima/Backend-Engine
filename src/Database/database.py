@@ -35,12 +35,11 @@ def update_user_data(table, cid, user_data):
 
             # Insert/Update the item in DynamoDB
             table.put_item(Item=item)
-            print(f"User data added to DynamoDB for CID: {cid}")
             
     except ClientError as e:
          raise Exception(f"Error updating user data in DynamoDB: {e}")
     
-def get_user_data_from_database(user_id, table):
+def get_user_data(user_id, table):
     try:
         response = table.query(
             KeyConditionExpression=boto3.dynamodb.conditions.Key('userId').eq(user_id)
@@ -59,9 +58,8 @@ def get_user_data_from_database(user_id, table):
             return None
 
     except NoCredentialsError:
-        print("Error: AWS credentials not found. Make sure to set up your credentials.")
-        return None
+       raise Exception("Error: AWS credentials not found. Make sure to set up your credentials.")
+
 
     except Exception as e:
-        print(f"Error in get_user_data_from_database: {e}")
-        return None
+       raise Exception(f"Error in get_user_data_from_database: {e}")

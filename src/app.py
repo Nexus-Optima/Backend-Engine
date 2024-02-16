@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import logging
 from dotenv import load_dotenv
-from Database.database import get_dynamodb_table, update_user_data,get_user_data_from_database
+from Database.database import get_dynamodb_table, update_user_data,get_user_data
 from Utils.constants import Database
 from Utils.database_utils import forecast_tool,other_tools
 
@@ -31,7 +31,7 @@ def get_user():
         if not user_id:
             return jsonify({"error": "Missing 'cid' parameter"}), 400
 
-        user_data = get_user_data_from_database(user_id, table)
+        user_data = get_user_data(user_id, table)
 
         if user_data is not None:
             return jsonify(user_data)
