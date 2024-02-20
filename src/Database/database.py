@@ -45,11 +45,14 @@ def get_user_data(user_id, table):
         items = response.get('Items', [])
 
         if items:
-            combined_user_data = {}
+            combined_user_data = {} 
             for item in items:
+                module_id = item.get('moduleId')
                 module_data = item.get('moduleData', {})
-                combined_user_data[item['moduleId']] = module_data
-
+                module_name = item.get('moduleName', '')
+                
+                combined_user_data[module_id] = {"moduleData": module_data, "moduleName": module_name}
+                
             return combined_user_data
         else:
             print("User not found in DynamoDB")

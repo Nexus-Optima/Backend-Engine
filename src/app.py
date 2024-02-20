@@ -72,4 +72,4 @@ if __name__ == '__main__':
     try:
         app.run(host="0.0.0.0", debug=True)
     except NoCredentialsError:
-        print("Error: AWS credentials not found. Make sure to set up your credentials.")
+        raise Exception("Error: AWS credentials not found. Make sure to set up your credentials.")
