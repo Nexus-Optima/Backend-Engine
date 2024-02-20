@@ -51,11 +51,7 @@ def get_user_data(user_id, table):
                 module_data = item.get('moduleData', {})
                 module_name = item.get('moduleName', '')
                 
-                if module_id not in combined_user_data:
-                    combined_user_data[module_id] = {"moduleData": module_data, "moduleName": module_name}
-                else:
-                    combined_user_data[module_id]["moduleData"].update(module_data)
-                    
+                combined_user_data[module_id] = {"moduleData": module_data, "moduleName": module_name}
                 
             return combined_user_data
         else:
