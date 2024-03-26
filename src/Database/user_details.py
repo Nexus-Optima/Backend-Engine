@@ -50,7 +50,6 @@ def get_user_details(email, table):
             KeyConditionExpression=boto3.dynamodb.conditions.Key('email').eq(email)
         )
         items = response.get('Items', [])
-        print(items)
         return items
 
     except NoCredentialsError:
