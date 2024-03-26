@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import logging
 from dotenv import load_dotenv
+from Database.user_details import get_dynamodb_client_table, update_client_details, get_user_details,update_personal_details
 from Database.database import get_dynamodb_table, update_module_data, get_user_data
 
 app = Flask(__name__)
@@ -13,6 +14,7 @@ logger.setLevel(logging.DEBUG)
 load_dotenv()
 
 table = get_dynamodb_table()
+client_table=get_dynamodb_client_table()
 
 
 @app.route('/', methods=['GET'])
@@ -66,6 +68,43 @@ def update_user():
         return jsonify({"status": "User updated successfully"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route('/update_details', methods=['POST'])
+def update_details():
+    data = request.json
+    success, error_message = update_client_details(client_table, data)
+
+    if success:
+        return jsonify({"success": True}), 200
+    else:
+        return jsonify({"error": "Failed to update client details.", "message": error_message}), 500
+
+
+@app.route('/get_details', methods=['GET'])
+def get():
+    try:
+        email = request.args.get('email')
+        if not email:
+            return jsonify({"error": "Missing 'cid' parameter"}), 400
+        user_details = get_user_details(email, client_table)
+
+        if user_details is not None:
+            return jsonify(user_details)
+        else:
+            return jsonify({"error": "User not found"}), 404
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/update_personal_details/<string:email>', methods=['PUT'])
+def update_personal_detail(email):
+    data = request.json
+
+    success, error_message = update_personal_details(client_table, data)
+    if success:
+        return jsonify({"success": True}), 200
+    else:
+        return jsonify({"error": "Failed to update client details.", "message": error_message}), 500
 
 
 if __name__ == '__main__':

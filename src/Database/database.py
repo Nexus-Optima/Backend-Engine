@@ -64,3 +64,5 @@ def get_user_data(user_id, table):
 
     except Exception as e:
         raise Exception(f"Error in get_user_data_from_database: {e}")
+
+
